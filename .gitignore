@@ -1,0 +1,6 @@
+
+*.ckpt
+
+*.jpeg
+
+*.sqlite3

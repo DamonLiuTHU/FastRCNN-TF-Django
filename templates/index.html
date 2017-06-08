@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <form action="/detect-object" method="POST" enctype="multipart/form-data">
+        <div style="border:2px dashed #6ac2ff; width: 80%;margin: auto">
+            <p align="center">
+                图片上传前预览：<input type="file" id="xdaTanFileImg" onchange="xmTanUploadImg(this)" accept="image/*"/>
+                {#            <input type="button" value="隐藏图片" onclick="document.getElementById('xmTanImg').style.display = 'none';"/>#}
+                <input type="submit" value="开始检测"
+                       onclick="document.getElementById('xmTanImg').style.display = 'block';"/>
+            </p>
+            <div align="center">
+                <img style="vertical-align: middle" id="xmTanImg"/>
+            </div>
+
+            <input type="image" id="hiddenImage" name="img"/>
+
+            <div id="xmTanDiv"></div>
+        </div>
+    </form>
+    <hr/>
+
+    <h1>register</h1>
+    <form method="post" enctype="multipart/form-data" >
+        {{uf.as_p}}
+        <input type="submit" value="ok" onchange="xmTanUploadImg(this)"/>
+    </form>
+
+    <script type="text/javascript">
+        //判断浏览器是否支持FileReader接口
+        if (typeof FileReader == 'undefined') {
+            document.getElementById("xmTanDiv").InnerHTML = "<h1>当前浏览器不支持FileReader接口</h1>";
+            //使选择控件不可操作
+            document.getElementById("xdaTanFileImg").setAttribute("disabled", "disabled");
+        }
+
+        //选择图片，马上预览
+        function xmTanUploadImg(obj) {
+            var file = obj.files[0];
+
+            console.log(obj);
+            console.log(file);
+            console.log("file.size = " + file.size);  //file.size 单位为byte
+
+            var reader = new FileReader();
+
+            //读取文件过程方法
+            reader.onloadstart = function (e) {
+                console.log("开始读取....");
+            }
+            reader.onprogress = function (e) {
+                console.log("正在读取中....");
+            }
+            reader.onabort = function (e) {
+                console.log("中断读取....");
+            }
+            reader.onerror = function (e) {
+                console.log("读取异常....");
+            }
+            reader.onload = function (e) {
+                console.log("成功读取....");
+
+                var img = document.getElementById("xmTanImg");
+                img.src = e.target.result;
+
+                var inputImage = document.getElementById("hiddenImage");
+                inputImage.value = e.target.result;
+                //或者 img.src = this.result;  //e.target == this
+            }
+
+            reader.readAsDataURL(file)
+        }
+    </script>
+</head>
+<body>
+
+</body>
+</html>
